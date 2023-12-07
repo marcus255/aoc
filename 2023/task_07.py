@@ -1,5 +1,8 @@
-with open('input_07.txt', 'r') as f:
-    lines = [x.strip() for x in f.readlines()]
+import aoc
+
+lines = aoc.get_lines(__file__)
+result1, result2 = 0, 0
+exp1, exp2 = 6440, 5905
 
 card_strengths = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A']
 cards_weights =  ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm']
@@ -98,11 +101,11 @@ for line in lines:
 # sort by score, then by weight_str
 results.sort(key=lambda x: (x[0], x[2]))
 
-total = 0
+result1 = 0
 for i, (score, bid, _) in enumerate(results):
-    total += ((i+1) * int(bid))
+    result1 += ((i+1) * int(bid))
 
-print(f'Part 1: {total}')
+aoc.print_result(1, result1, exp1)
 
 #Part 2
 card_strengths_2 = ['J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A']
@@ -148,9 +151,9 @@ for line in lines:
 # sort by score, then by weight_str_orig, then by weight_str
 results.sort(key=lambda x: (x[0], x[1], x[2]))
 
-total = 0
+result2 = 0
 for i, (score, _, _, bid, orig_cards, best_cards) in enumerate(results):
     # print(f'{i+1}: {orig_cards} -> {best_cards}, score: {score} bid: {bid}')
-    total += ((i+1) * int(bid))
+    result2 += ((i+1) * int(bid))
 
-print(f'Part 2: {total}')
+aoc.print_result(2, result2, exp2)
