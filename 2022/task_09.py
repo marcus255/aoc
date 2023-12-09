@@ -6,10 +6,6 @@ exp1, exp2 = 1, 1
 
 # Common
 
-
-
-
-
 # Part 1
 
 aoc.print_result(1, result1, exp1)
