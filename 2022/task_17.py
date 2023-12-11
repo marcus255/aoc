@@ -30,14 +30,6 @@ INSERT_COL = 2
 SPACE_REQUIRED = 3
 
 def print_chambers(chamber, rock_coords, label='Chambers'):
-    pass
-    # print(f'\n{label}')
-    # for i, level, in enumerate(chamber):
-    #     r = len(chamber) - i - 1
-    #     level = ['@' if ((r, c) in rock_coords) else ('#' if chamber[r][c] == '#' else '.') for c in range(WIDTH)]
-    #     print(f'{"".join(level)}')
-
-def print_chambers2(chamber, rock_coords, label='Chambers'):
     print(f'\n{label}')
     for i, level, in enumerate(chamber):
         r = len(chamber) - i - 1
@@ -86,17 +78,21 @@ def embedd_rock(chamber, rock_coords):
             raise RuntimeError(f'Unexpected rock already at position ({r},{c})')
         chamber[r][c] = '#'
 
-def simulate_rockfall(chamber, num_rocks):
+def simulate_rockfall(chamber, num_rocks, use_skipping=False):
     no_more_moves = True
     rock_coords = []
     move_counter = 0
     rock_counter = 0
+    extra_rows = 0
+    pattern = { 'start': 100 if use_skipping else num_rocks, 'len': 20 }
 
     while rock_counter < num_rocks:
-        wind_move = wind[move_counter % len(wind)]
+        wind_index = move_counter % len(wind)
+        wind_move = wind[wind_index]
         # print(f'Rock {rock_counter+1}, move {move_counter+1}: {wind_move}', len(chamber))
         move_counter += 1
         rock = rocks[rock_counter % len(rocks)]
+
         if no_more_moves:
             new_levels = get_new_level_count(chamber, rock['h'])
             if new_levels < 0:
@@ -106,105 +102,59 @@ def simulate_rockfall(chamber, num_rocks):
 
             insert_position = (len(chamber) - rock['h'], INSERT_COL)
             rock_coords = init_rock_position(insert_position, rock['coords'])
-            print_chambers(chamber, rock_coords, 'rock added')
+            # print_chambers(chamber, rock_coords, 'rock added')
             no_more_moves = False
-        
+
         new_rock_coords = move_rock(move_map[wind_move], rock_coords, chamber)
         if new_rock_coords:
             rock_coords = new_rock_coords
-            print_chambers(chamber, rock_coords, 'Wind move done')
+            # print_chambers(chamber, rock_coords, 'Wind move done')
 
-        
         new_rock_coords = move_rock(MOVE_DOWN, rock_coords, chamber)
         if new_rock_coords:
             rock_coords = new_rock_coords
-            print_chambers(chamber, rock_coords, 'Down move done')
+            # print_chambers(chamber, rock_coords, 'Down move done')
         else:
             # print_chambers(chamber, rock_coords, 'No down move')
             embedd_rock(chamber, rock_coords)
             rock_coords = []
-            print_chambers(chamber, rock_coords, 'Rock embedded')
+            # print_chambers(chamber, rock_coords, 'Rock embedded')
             no_more_moves = True
+
+            pattern_len = pattern['len']
+            current_wind = (wind + wind)[wind_index-pattern_len:wind_index]
+            chamber_top = ''.join(sum(chamber[-pattern_len:], []))
+            if rock_counter == pattern['start']:
+                pattern['chamber_top'] = chamber_top
+                pattern['rock_index'] = rock_counter
+                pattern['wind'] = current_wind
+                pattern['chamber_height'] = len(chamber)
+            elif rock_counter > pattern['start']:
+                if current_wind == pattern['wind'] and chamber_top == pattern['chamber_top']:
+                    rocks_in_sequence = rock_counter - pattern['rock_index']
+                    rows_in_sequence = len(chamber) - pattern['chamber_height']
+                    repeat_count = (num_rocks - rock_counter) // rocks_in_sequence
+                    rock_counter += repeat_count * rocks_in_sequence
+                    extra_rows = rows_in_sequence * repeat_count
+                    print(f'Sequence: {rocks_in_sequence} rocks, {rows_in_sequence} rows, {repeat_count} repeats')
+                    print(f'Adding {extra_rows} extra rows, skipping to rock {rock_counter}')
+                    pattern['start'] = num_rocks
             rock_counter += 1
+
+    return extra_rows
 
 # Part 1
 NUM_ROCKS = 2022
 chamber = [['.' for _ in range(WIDTH)] for _ in range(INIT_HEIGHT)]
 simulate_rockfall(chamber, NUM_ROCKS)
 result1 = get_top_level_index(chamber)
-# print_chambers2(chamber[-10:], [], 'Top')
-# print_chambers2(chamber[:10], [], 'Bottom')
-
-chamber_blocks = sum([line.count('#') for line in chamber])
-fallen_blocks = sum([rocks[i%5]['size'] for i in range(NUM_ROCKS)])
-if chamber_blocks != fallen_blocks:
-    raise RuntimeError(f'Block count not match, fallen: {fallen_blocks}, chamber: {chamber_blocks}')
+# print_chambers(chamber[-10:], [], 'Top')
+# print_chambers(chamber[:10], [], 'Bottom')
 aoc.print_result(1, result1, exp1)
 
 # Part 2
-NUM_ROCKS = 10000
+NUM_ROCKS = 1_000_000_000_000
 chamber = [['.' for _ in range(WIDTH)] for _ in range(INIT_HEIGHT)]
-simulate_rockfall(chamber, NUM_ROCKS)
-
-print_chambers2(chamber[:10], [], 'Bottom')
-
-LEN = len(chamber)
-print(LEN)
-BLOCK_SIZE = 10
-REF_START = 50
-match = True
-matches = []
-for offset in range(REF_START+BLOCK_SIZE, LEN-REF_START-BLOCK_SIZE):
-    match = True
-    for ref_offset in range(REF_START, REF_START+BLOCK_SIZE):
-        try:
-            if chamber[ref_offset] != chamber[offset+ref_offset]:
-                match = False
-                break
-        except IndexError:
-            print(ref_offset, offset+ref_offset)
-            import sys
-            sys.exit(-1)
-    if match:
-        # print_chambers2(chamber[(offset-5):(offset+5)], [], 'matched sequence')
-        matches.append(offset - BLOCK_SIZE)
-    if len(matches) > 1:
-        break
-distance = matches[1] - matches[0]
-position = matches[0]
-while position > distance:
-    position -= distance
-print_chambers2(chamber[(position-5):(position+5)], [], 'matched sequence')
-print(f'Distance: {distance}, start position: {position}')
-
-NUM_ROCKS = 1000000000000
-block_count = 0
-rock_block_count = 0
-rock_count = 0
-for line in chamber[:position]:
-    block_count += line.count('#')
-    if block_count > rock_block_count:
-        rock_block_count += rocks[rock_count%5]['size']
-        rock_count += 1
-print(f'Initial chamber blocks: {block_count}, rock blocks: {rock_block_count}, rocks: {rock_count}')
-initial_rocks = rock_count
-
-block_count = 0
-rock_block_count = 0
-for line in chamber[position:position+distance]:
-    block_count += line.count('#')
-    if block_count > rock_block_count:
-        rock_block_count += rocks[rock_count%5]['size']
-        rock_count += 1
-sequence_rocks = rock_count-initial_rocks
-print(f'Repeating chamber blocks: {block_count}, rock blocks: {rock_block_count}, rocks: {sequence_rocks}')
-
-
-rocks_init = NUM_ROCKS - initial_rocks
-rocks_seqence = rocks_init // sequence_rocks
-rocks_left = rocks_init - (rocks_seqence*sequence_rocks)
-print(initial_rocks, rocks_seqence, rocks_left)
-
-result2 = position + ((NUM_ROCKS - initial_rocks) // sequence_rocks) * distance + 35
-
+extra_rows = simulate_rockfall(chamber, NUM_ROCKS, use_skipping=True)
+result2 = extra_rows + get_top_level_index(chamber)
 aoc.print_result(2, result2, exp2)
