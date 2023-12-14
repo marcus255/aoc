@@ -1,15 +1,13 @@
 import aoc
+from functools import cache
 
 lines = aoc.get_lines(__file__)
 result1, result2 = 0, 0
 exp1, exp2 = 136, 64
 
 # Common
-
-
 def sub_collapse_line(line, start, stop):
     loose_rocks = 0
-    # print(f'sub: {line}')
     for i in range(start, stop):
         item = line[i]
         if item == 'O':
@@ -21,132 +19,98 @@ def sub_collapse_line(line, start, stop):
             line[i] = 'O'
             loose_rocks -= 1
         i += 1
-    # print(f'sub: {line}')
     return line
 
+@cache
 def collapse_line(line):
     line_len = len(line)
+    tmp_line = list(line)
     start_i = 0
     while start_i < line_len:
-        if line[start_i] == '#':
+        if tmp_line[start_i] == '#':
             start_i += 1
             continue
         try:
-            end_i = line.index('#', start_i)
+            end_i = tmp_line.index('#', start_i)
         except ValueError:
             end_i = line_len
         segment_len = end_i - start_i
-        # print(start_i, end_i)
         if end_i - start_i > 1:
-            line = sub_collapse_line(line, start_i, end_i)
-            if line_len != len(line):
+            tmp_line = sub_collapse_line(tmp_line, start_i, end_i)
+            if line_len != len(tmp_line):
                 raise RuntimeError
         start_i += segment_len
-        # break
-    return line
+    return tmp_line
 
-def get_line_load(line):
-    load = 0
-    for i, item in enumerate(line):
-        if item == 'O':
-            load += (len(line) - i)
-    return load
+def get_grid_load(grid):
+    sum_rocks = 0
+    for i, line in enumerate(grid):
+        s = line.count('O') * (len(line) - i)
+        sum_rocks += s
+    return sum_rocks
+
+def rotated_2d(array, rotate_left=True, mutable=True):
+    rotated = list(zip(*array))[::-1] if rotate_left else list(zip(*array[::-1]))
+    return [list(line) for line in rotated] if mutable else rotated
+
+def rotated_2d_left(array):
+    return rotated_2d(array, rotate_left=True)
+
+def rotated_2d_right(array):
+    return rotated_2d(array, rotate_left=False)
+
+def print_grid(grid, msg='Grid'):
+    print(f'\n{msg}:')
+    for line in grid:
+        print(' '.join(line))
+
+def find_repeating(array, pat_len):
+    prev_i = pat_len
+    seq_lens = []
+    for i in range(pat_len, len(array)):
+        if len(array[i:i+pat_len]) != len(array[:pat_len]):
+            continue
+        if array[i:i+pat_len] == array[:pat_len]:
+            if prev_i != i:
+                seq_lens.append(i - prev_i)
+            prev_i = i
+            if len(seq_lens) > 10:
+                return max(seq_lens)
+    return 0
 
 # Part 1
-
-
-# rotated_grid = list(zip(*lines))
-# rotated_grid = [list(line) for line in rotated_grid]
-
-
-# total_load = 0
-# for line in rotated_grid:
-#     # print(f'\nLine {line}')
-#     line = collapse_line(line)
-#     # print(f'     {line}')
-#     total_load += get_line_load(line)
-#     # break
-
-# result1 = total_load
+current_grid = rotated_2d_left(lines)
+current_grid = [collapse_line(tuple(line)) for line in current_grid]
+result1 = get_grid_load(rotated_2d_right(current_grid))
 aoc.print_result(1, result1, exp1)
 
 # Part 2
 CYCLES = 1000_000_000
-# CYCLES = 3
-print(f'\n Initial grid')
-for l in lines:
-    print(' '.join(l))
-# Rotating left
-rotated_grid = list(zip(*lines))[::-1]
-rotated_grid = [list(line) for line in rotated_grid]
-total_load = 0
+PATTERN_LEN = 50
+PATTERN_OFFSET = 800
+# print_grid(lines, 'Initial grid')
+current_grid = rotated_2d_left(lines)
 subsums = []
+repeat_found = False
+cycle = 0
 
-
-done = False
-tries = 0
-x = 0
-while x < CYCLES:
+while cycle < CYCLES:
     for y in range(4):
-        for ii, line in enumerate(rotated_grid):
-            line = collapse_line(line)
-        # Rotating right
-        rotated_grid = list(zip(*rotated_grid[::-1]))
-        rotated_grid = [list(line) for line in rotated_grid]
+        current_grid = [collapse_line(tuple(line)) for line in current_grid]
+        current_grid = rotated_2d_right(current_grid)
 
+    grid_load = get_grid_load(rotated_2d_right(current_grid))
+    subsums.append(grid_load)
 
-    sum_rocks = 0
-    tmp_grid = list(zip(*rotated_grid[::-1]))
-    # print(f'\n grid at ({x})')
-    # for l in tmp_grid:
-    #     print(' '.join(l))
-    for i, line in enumerate(tmp_grid):
-        s= line.count('O') * (len(line) - i)
-        sum_rocks += s
-    #     print(f'{i}: row load {s}, count {line.count("O")}')
-    # print(f'Sum: {sum_rocks}')
-    subsums.append(sum_rocks)
+    if cycle > PATTERN_OFFSET and not repeat_found:
+        seq_len = find_repeating(subsums[PATTERN_OFFSET:], PATTERN_LEN)
+        if seq_len:
+            repeat_found = True
+            skip = ((CYCLES - cycle) // seq_len) * seq_len
+            cycle += skip
+    cycle += 1
 
-    num = 10
-    offset = 800
-    pat_len = 50
-    subarr = subsums[offset:]
-    prev_i = pat_len
-    seq_lens = []
-    if x > offset and not done:
-        for i in range(pat_len, len(subarr)):
-            if len(subarr[i:i+pat_len]) != len(subarr[:pat_len]):
-                continue
-            if not done and subarr[i:i+pat_len] == subarr[:pat_len]:
-                if prev_i != i:
-                    print(i - prev_i)
-                    seq_lens.append(i - prev_i)
-                prev_i = i
-                if len(seq_lens) > 10:
-                    seq_len = max(seq_lens)
-                    skip = ((CYCLES - x) // seq_len) * seq_len
-                    print(f'Skipping {skip} {seq_len}')
-                    x += skip
-                    # x -= 1
-                    done = True
-
-    if x == (CYCLES - 1):
-        break
-    
-    x += 1
-
-print(f'x: {x+1}')
-
-total_load = subsums[-1]
-
-# Rotating right
-rotated_grid = list(zip(*rotated_grid[::-1]))
-rotated_grid = [list(line) for line in rotated_grid]
-
-
-print(f'\n grid at end')
-for l in rotated_grid:
-    print(' '.join(l))
-
-result2 = total_load
+current_grid = rotated_2d_right(current_grid)
+# print_grid(current_grid, 'Grid after all cycles')
+result2 = subsums[-1]
 aoc.print_result(2, result2, exp2)
