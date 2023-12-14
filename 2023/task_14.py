@@ -1,4 +1,5 @@
 import aoc
+import aoc_utils as utils
 from functools import cache
 
 lines = aoc.get_lines(__file__)
@@ -49,16 +50,6 @@ def get_grid_load(grid):
         sum_rocks += s
     return sum_rocks
 
-def rotated_2d(array, rotate_left=True, mutable=True):
-    rotated = list(zip(*array))[::-1] if rotate_left else list(zip(*array[::-1]))
-    return [list(line) for line in rotated] if mutable else rotated
-
-def rotated_2d_left(array):
-    return rotated_2d(array, rotate_left=True)
-
-def rotated_2d_right(array):
-    return rotated_2d(array, rotate_left=False)
-
 def print_grid(grid, msg='Grid'):
     print(f'\n{msg}:')
     for line in grid:
@@ -79,9 +70,9 @@ def find_repeating(array, pat_len):
     return 0
 
 # Part 1
-current_grid = rotated_2d_left(lines)
+current_grid = utils.rotated_2d_left(lines)
 current_grid = [collapse_line(tuple(line)) for line in current_grid]
-result1 = get_grid_load(rotated_2d_right(current_grid))
+result1 = get_grid_load(utils.rotated_2d_right(current_grid))
 aoc.print_result(1, result1, exp1)
 
 # Part 2
@@ -89,7 +80,7 @@ CYCLES = 1000_000_000
 PATTERN_LEN = 50
 PATTERN_OFFSET = 800
 # print_grid(lines, 'Initial grid')
-current_grid = rotated_2d_left(lines)
+current_grid = utils.rotated_2d_left(lines)
 subsums = []
 repeat_found = False
 cycle = 0
@@ -97,9 +88,9 @@ cycle = 0
 while cycle < CYCLES:
     for y in range(4):
         current_grid = [collapse_line(tuple(line)) for line in current_grid]
-        current_grid = rotated_2d_right(current_grid)
+        current_grid = utils.rotated_2d_right(current_grid)
 
-    grid_load = get_grid_load(rotated_2d_right(current_grid))
+    grid_load = get_grid_load(utils.rotated_2d_right(current_grid))
     subsums.append(grid_load)
 
     if cycle > PATTERN_OFFSET and not repeat_found:
@@ -110,7 +101,7 @@ while cycle < CYCLES:
             cycle += skip
     cycle += 1
 
-current_grid = rotated_2d_right(current_grid)
+current_grid = utils.rotated_2d_right(current_grid)
 # print_grid(current_grid, 'Grid after all cycles')
 result2 = subsums[-1]
 aoc.print_result(2, result2, exp2)
