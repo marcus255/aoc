@@ -3,6 +3,8 @@ import sys
 import re
 import time
 
+start_time = 0
+
 class ColorPrint:
     PINK = '\033[95m'
     BLUE = '\033[94m'

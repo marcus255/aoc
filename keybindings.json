@@ -1,9 +1,16 @@
 [
-    {
-        "key": "ctrl+alt+r",
-        "command": "workbench.action.terminal.sendSequence",
-        "args": {
-          "text": "echo (python .\\last_task_runner.py test) (python .\\last_task_runner.py)\u000D"
-        }
+  {
+    "key": "ctrl+alt+r",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "python last_task_runner.py test\u000D"
     }
+  },
+  {
+    "key": "ctrl+alt+e",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": {
+      "text": "python last_task_runner.py\u000D"
+    }
+  }
 ]
