@@ -70,12 +70,14 @@ def find_repeating(array, pat_len):
     return 0
 
 # Part 1
+aoc.mark_task_start()
 current_grid = utils.rotated_2d_left(lines)
 current_grid = [collapse_line(tuple(line)) for line in current_grid]
 result1 = get_grid_load(utils.rotated_2d_right(current_grid))
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 CYCLES = 1000_000_000
 PATTERN_LEN = 50
 PATTERN_OFFSET = 800

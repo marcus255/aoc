@@ -66,7 +66,7 @@ def find_paths():
             try:
                 move = MOVES[next_char][move]
             except KeyError:
-                print(f'No more moves for start {start_move}, char {next_char} move {move}')
+                # print(f'No more moves for start {start_move}, char {next_char} move {move}')
                 break
             position = (c + move[0], r + move[1])
             path_per_loop[start_move].append(position)
@@ -116,24 +116,26 @@ def clear_fields_not_in_path(path):
 
 # Common
 start_position = find_start_position()
-print(f'Starting at {start_position}')
+# print(f'Starting at {start_position}')
 
 # Part 1
+aoc.mark_task_start()
 steps_per_loop, path_per_loop = find_paths()
 max_steps = max([s for s in steps_per_loop.values()])
 result1 = max_steps // 2
-print(f'Valid path length: {max_steps}, farthest position: {result1}')
+# print(f'Valid path length: {max_steps}, farthest position: {result1}')
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 valid_start_moves = [move for move, step in steps_per_loop.items() if step == max_steps]
 valid_start_char = find_valid_start_char(valid_start_moves)
-print(f'Valid start moves: {valid_start_moves}, valid start char: {valid_start_char}')
+# print(f'Valid start moves: {valid_start_moves}, valid start char: {valid_start_char}')
 
 c, r = start_position
 lines[r] = lines[r][:c] + valid_start_char + lines[r][c+1:]
 valid_path = path_per_loop[valid_start_moves[0]]
-print(f'Valid path size: {len(valid_path)}')
+# print(f'Valid path size: {len(valid_path)}')
 
 clear_fields_not_in_path(valid_path)
 

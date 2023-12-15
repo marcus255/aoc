@@ -35,22 +35,6 @@ def get_broken_spring_lengths(row):
         sizes.append(size)
     return sizes
 
-# Part 1
-# Combinational algorithm, slow and inefficient
-num_matches = 0
-for chars, sizes in zip(all_chars, all_sizes):
-    combinations = itertools.product('#.', repeat=chars.count('?'))
-    for combination in combinations:
-        temp_str = chars
-        for position in combination:
-            temp_str = temp_str.replace('?', position, 1)
-        if get_broken_spring_lengths(temp_str) == sizes:
-            num_matches += 1
-result1 = num_matches
-aoc.print_result(1, result1, exp1)
-
-# Part 2
-# Functional programming, recursively invoke the function
 CACHE = {}
 def get_num_solutions(chars, sizes, group_index=0):
     if len(chars) == 0:
@@ -78,6 +62,19 @@ def get_num_solutions(chars, sizes, group_index=0):
 
     CACHE[key] = solutions
     return solutions
+
+# Part 1
+aoc.mark_task_start()
+total_solutions = 0
+for chars, sizes in zip(all_chars, all_sizes):
+    num_solutions = get_num_solutions(chars + '.', tuple(sizes))
+    total_solutions += num_solutions
+result1 = total_solutions
+aoc.print_result(1, result1, exp1)
+
+# Part 2
+# Functional programming, recursively invoke the function
+aoc.mark_task_start()
 
 total_solutions = 0
 for chars, sizes in zip(all_chars, all_sizes):

@@ -28,10 +28,12 @@ for i, line in enumerate(lines):
     lines[i] = line
 
 # Part 1
+aoc.mark_task_start()
 for numbers in lines:
     result1 += find_value(extend(numbers))
 aoc.print_result(1, result1, exp1)
 
+aoc.mark_task_start()
 # Part 2
 for numbers in lines:
     result2 += find_value(extend(numbers), False)

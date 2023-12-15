@@ -1,7 +1,7 @@
 import os
 import sys
 import re
-
+import time
 
 class ColorPrint:
     PINK = '\033[95m'
@@ -52,13 +52,21 @@ def get_content(file_path, strip=True):
         content = f.read()
     return content.strip() if strip else content
 
-def print_result(part, result, exp=None):
+def mark_task_start():
+    global start_time
+    start_time = time.time()
+
+def print_result(part, result, exp=None, year=2023):
     status, error = '', ''
     ok = (exp == result)
+    time_spent_ms = (time.time() - start_time) * 1000
+    exec_time = f'{time_spent_ms:4.0f} ms'
+    task_number = sys.argv[0].split(".")[0].split('_')[1]
+    name = f'[ {exec_time} ] [ {year}-{task_number}-{part} ]'
     if is_test_mode():
         status = ColorPrint.ok('[ PASS ] ') if ok else ColorPrint.err('[ FAIL ] ')
         error = '' if ok else ColorPrint.err(f' <= Expected: {exp}')
-        msg = f'{status}Part {part}: {result} {error}'
+        msg = f'{status}{name}: {result} {error}'
     else:
-        msg = f'Part {part}: {ColorPrint.inf(result)}'
+        msg = f'{name}: {ColorPrint.inf(result)}'
     print(msg)

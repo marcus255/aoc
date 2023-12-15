@@ -33,10 +33,12 @@ def get_sequence_length(start_points, end_points):
     return sequence_lengths
 
 # Part 1
+aoc.mark_task_start()
 result1 = get_sequence_length(['AAA'], ['ZZZ'])[0]
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 start_points = list(filter(lambda num: num.endswith('A'), transitions.keys()))
 end_points = list(filter(lambda num: num.endswith('Z'), transitions.keys()))
 seq_lengths = get_sequence_length(start_points, end_points)

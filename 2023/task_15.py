@@ -2,7 +2,7 @@ import aoc
 
 lines = aoc.get_lines(__file__)
 result1, result2 = 0, 0
-exp1, exp2 = 1, 1
+exp1, exp2 = 1320, 145
 
 sequence = lines[0].split(',')
 
@@ -16,6 +16,7 @@ def get_hash(text):
     return current_value
 
 # Part 1
+aoc.mark_task_start()
 total = 0
 for s in sequence:
     total += get_hash(s)
@@ -24,6 +25,7 @@ result1 = total
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 boxes = [[] for _ in range(256)]
 for s in sequence:
     
@@ -44,14 +46,6 @@ for s in sequence:
         box_num = get_hash(operation)
         boxes[box_num] = list(filter(lambda x: x[0] != operation, boxes[box_num]))
 
-for i, box in enumerate(boxes):
-    if not box:
-        continue
-    print(f'\n{i}: ', end='')
-    for lense in box:
-        print(f'[{lense[0]} {lense[1]}]', end = '')
-print()
-
 power = 0
 for i, box in enumerate(boxes):
     if not box:
@@ -59,7 +53,6 @@ for i, box in enumerate(boxes):
     box_power = 0
     for j, (_, lense) in enumerate(box):
         box_power += (i + 1) * (j + 1) * int(lense)
-    print(f'power {i}: {box_power}')
     power += box_power
 
 result2 = power

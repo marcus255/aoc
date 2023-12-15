@@ -42,6 +42,7 @@ def find_reflections(mirror):
     return tuple(reflections)
 
 # Part 1
+aoc.mark_task_start()
 total = 0
 for mirror in mirrors:
     href = find_reflections(mirror)
@@ -58,6 +59,7 @@ def switch_item_at(grid, i, j):
     grid[i][j] = '.' if grid[i][j] == '#' else '#'
 
 # Part 2
+aoc.mark_task_start()
 total = 0
 for mirror in mirrors:
     href = find_reflections(mirror)

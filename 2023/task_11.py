@@ -54,10 +54,12 @@ def get_distances_sum(empty_space):
     return functools.reduce(operator.add, distances) // 2
 
 # Part 1
+aoc.mark_task_start()
 result1 = get_distances_sum(2)
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 EMTPY_SPACE = 100 if aoc.is_test_mode() else 1000_000
 result2 = get_distances_sum(EMTPY_SPACE)
 aoc.print_result(2, result2, exp2)
