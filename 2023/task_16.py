@@ -15,13 +15,14 @@ m = {
 }
 m['LR'] = [m['L'], m['R']]
 m['UD'] = [m['U'], m['D']]
+LEFT, RIGHT, UP, DOWN = (0, -1), (0, 1), (-1, 0), (1, 0)
 transition_map = {
-# from-to:  left -> right    right -> left     up -> down       down -> up
-    '/':  { (0, 1): m['U'],  (0, -1): m['D'],  (1, 0): m['L'],  (-1, 0): m['R']  },
-    '\\': { (0, 1): m['D'],  (0, -1): m['U'],  (1, 0): m['R'],  (-1, 0): m['L']  },
-    '|':  { (0, 1): m['UD'], (0, -1): m['UD'], (1, 0): m['D'],  (-1, 0): m['U']  },
-    '-':  { (0, 1): m['R'],  (0, -1): m['L'],  (1, 0): m['LR'], (-1, 0): m['LR'] },
-    '.':  { (0, 1): m['R'],  (0, -1): m['L'],  (1, 0): m['D'],  (-1, 0): m['U']  },
+# from-to:  left -> right   right -> left  up -> down     down -> up
+    '/':  { RIGHT: m['U'],  LEFT: m['D'],  DOWN: m['L'],  UP: m['R']  },
+    '\\': { RIGHT: m['D'],  LEFT: m['U'],  DOWN: m['R'],  UP: m['L']  },
+    '|':  { RIGHT: m['UD'], LEFT: m['UD'], DOWN: m['D'],  UP: m['U']  },
+    '-':  { RIGHT: m['R'],  LEFT: m['L'],  DOWN: m['LR'], UP: m['LR'] },
+    '.':  { RIGHT: m['R'],  LEFT: m['L'],  DOWN: m['D'],  UP: m['U']  },
 }
 
 def get_energized_tiles(start_pos_dir, positions_dirs=None):
