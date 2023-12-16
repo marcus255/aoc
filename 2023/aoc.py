@@ -62,7 +62,7 @@ def print_result(part, result, exp=None, year=2023):
     status, error = '', ''
     ok = (exp == result)
     time_spent_ms = (time.time() - start_time) * 1000
-    exec_time = f'{time_spent_ms:4.0f} ms'
+    exec_time = f'{time_spent_ms:4.0f} ms' if start_time else 'N/A'
     task_number = sys.argv[0].split(".")[0].split('_')[1]
     name = f'[ {exec_time} ] [ {year}-{task_number}-{part} ]'
     if is_test_mode():

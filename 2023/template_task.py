@@ -11,9 +11,15 @@ exp1, exp2 = 1, 1
 
 
 # Part 1
+aoc.mark_task_start()
+
+
 
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
+
+
 
 aoc.print_result(2, result2, exp2)
