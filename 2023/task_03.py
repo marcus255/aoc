@@ -1,5 +1,8 @@
-with open('input_03.txt', 'r') as f:
-    lines = [x.strip() for x in f.readlines()]
+import aoc
+
+lines = aoc.get_lines(__file__)
+result1, result2 = 0, 0
+exp1, exp2 = 4361, 467835
 
 symbols = list('*%@#+$-=/&')
 
@@ -14,7 +17,8 @@ for i, line in enumerate(lines):
                 symbol_positions[i].append(index)
         except ValueError:
             pass
-
+# Part 1
+aoc.mark_task_start()
 total = 0
 for i, line in enumerate(lines):
     numbers_line = line
@@ -68,9 +72,11 @@ for i, line in enumerate(lines):
         if match:
             continue
 
-print(total)
+result1 = total
+aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 star_coords = [] # this will hold coordinates of cells adjacent to stars: (x, y)
 for i, line in enumerate(lines):
     star_index = -1
@@ -120,8 +126,8 @@ for i, line in enumerate(lines):
                 numbers_coords[(i, x + width)] = number
             skip_next = True
 
-for k, v in numbers_coords.items():
-    print(f'{k} => {v}')
+# for k, v in numbers_coords.items():
+#     print(f'{k} => {v}')
 
 def get_unique_adjacent_nums(star_coords):
     adjacent_nums = []
@@ -138,9 +144,10 @@ total = 0
 for coord in star_coords:
     nums = get_unique_adjacent_nums(coord)
     if len(nums) != 2:
-        print(f'Skipping: {len(nums)}')
+        # print(f'Skipping: {len(nums)}')
         continue
     total += (int(nums[0]) * int(nums[1]))
     # print(f'{coord} => {nums}')
 
-print(f'Total: {total}')
+result2 = total
+aoc.print_result(2, result2, exp2)

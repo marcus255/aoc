@@ -3,16 +3,17 @@ import math
 
 lines = aoc.get_lines(__file__)
 result1, result2 = 0, 0
-exp1, exp2 = 1, 6
+exp1, exp2 = 6, 6
 
-sides = lines[0]
-transitions = {}
-for line in lines[2:]:
-    a, xy = line.split(' = (')
-    x, y = xy.split(')')[0].split(', ')
-    transitions[a] = (x, y)
+part1_lines = [
+    'LLR',
+    '',
+    'AAA = (BBB, BBB)',
+    'BBB = (AAA, ZZZ)',
+    'ZZZ = (ZZZ, ZZZ)',
+]
 
-def get_sequence_length(start_points, end_points):
+def get_sequence_length(transitions, start_points, end_points):
     sequence_lengths = []
     for start_a in start_points:
         index = 0
@@ -34,13 +35,27 @@ def get_sequence_length(start_points, end_points):
 
 # Part 1
 aoc.mark_task_start()
-result1 = get_sequence_length(['AAA'], ['ZZZ'])[0]
+sides = part1_lines[0]
+transitions = {}
+for instr in part1_lines[2:]:
+    a, xy = instr.split(' = (')
+    x, y = xy.split(')')[0].split(', ')
+    transitions[a] = (x, y)
+    # print(f'{a} => ({x}, {y})')
+result1 = get_sequence_length(transitions, ['AAA'], ['ZZZ'])[0]
 aoc.print_result(1, result1, exp1)
 
 # Part 2
 aoc.mark_task_start()
+sides = lines[0]
+transitions = {}
+for instr in lines[2:]:
+    a, xy = instr.split(' = (')
+    x, y = xy.split(')')[0].split(', ')
+    transitions[a] = (x, y)
+    
 start_points = list(filter(lambda num: num.endswith('A'), transitions.keys()))
 end_points = list(filter(lambda num: num.endswith('Z'), transitions.keys()))
-seq_lengths = get_sequence_length(start_points, end_points)
+seq_lengths = get_sequence_length(transitions, start_points, end_points)
 result2 = math.lcm(*seq_lengths)
 aoc.print_result(2, result2, exp2)

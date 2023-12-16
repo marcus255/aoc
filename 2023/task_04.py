@@ -1,5 +1,8 @@
-with open('input_04.txt', 'r') as f:
-    lines = [x.strip() for x in f.readlines()]
+import aoc
+
+lines = aoc.get_lines(__file__)
+result1, result2 = 0, 0
+exp1, exp2 = 13, 30
 
 # Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53
 # Card 2: 13 32 20 16 61 | 61 30 68 82 17 32 24 19
@@ -8,6 +11,8 @@ with open('input_04.txt', 'r') as f:
 # Card 5: 87 83 26 28 32 | 88 30 70 12 93 22 82 36
 # Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
+# Part 1
+aoc.mark_task_start()
 total_score = 0
 matches_per_card = []
 for line in lines:
@@ -28,16 +33,16 @@ for line in lines:
     score = 2**(match_count - 1)
     if total_count == len(sum):
         score = 0
-    print(match_count, score)
+    # print(match_count, score)
     matches_per_card.append([match_count])
     total_score += score
 
-print(total_score)
-print(matches_per_card)
+result1 = total_score
+aoc.print_result(1, result1, exp1)
 
 # Part 2
+aoc.mark_task_start()
 total_cards = 0
-print('Part 2')
 for i, matches in enumerate(matches_per_card):
     total_cards += 1
     # print(f'Card {i+1}: {matches}')
@@ -50,4 +55,5 @@ for i, matches in enumerate(matches_per_card):
             except IndexError:
                 pass
 
-print(total_cards)
+result2 = total_cards
+aoc.print_result(2, result2, exp2)

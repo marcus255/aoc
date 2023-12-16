@@ -1,6 +1,11 @@
-with open('input_02.txt', 'r') as f:
-    lines = [x.strip() for x in f.readlines()]
+import aoc
 
+lines = aoc.get_lines(__file__)
+result1, result2 = 0, 0
+exp1, exp2 = 8, 2286
+
+# Part 1
+aoc.mark_task_start()
 avail_cubes = { 'red': 12, 'green': 13, 'blue': 14 }
 possible_games = 0
 for i, line in enumerate(lines):
@@ -24,9 +29,11 @@ for i, line in enumerate(lines):
     if possible:
         possible_games += (i + 1)
 
-print(f'Sum of possible games: {possible_games}')
+result1 = possible_games
+aoc.print_result(1, result1, exp1)
         
 # Part 2
+aoc.mark_task_start()
 total_score = 0
 for line in lines:
     games = line.split(': ')[-1].split('; ')
@@ -43,4 +50,5 @@ for line in lines:
     row_score = min_set['red'] * min_set['green'] * min_set['blue']
     total_score += row_score
 
-print(f'Total score: {total_score}')
+result2 = total_score
+aoc.print_result(2, result2, exp2)

@@ -88,6 +88,8 @@ def get_score(cards):
         score = 1
     return score
 
+# Part 1
+aoc.mark_task_start()
 results = []
 for line in lines:
     cards, bid = line.split(' ')
@@ -108,6 +110,7 @@ for i, (score, bid, _) in enumerate(results):
 aoc.print_result(1, result1, exp1)
 
 #Part 2
+aoc.mark_task_start()
 card_strengths_2 = ['J', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A']
 all = card_strengths_2[1:]
 
