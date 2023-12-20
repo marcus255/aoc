@@ -1,3 +1,4 @@
+import sys
 import aoc
 import math
 
@@ -8,8 +9,10 @@ exp1, exp2 = 32000000, 1
 # Common
 modules = {}
 conj_modules = []
-flipflop_states = {}
 bcast_signals = None
+LOW, HIGH = 0, 1
+
+# Parse modules
 for line in lines:
     name, rest = line.split(' -> ')
     receivers = rest.split(', ')
@@ -18,125 +21,92 @@ for line in lines:
         bcast_signals = [(name, 0, 'broadcaster') for name in receivers]
     else:
         mod_type, mod_name = name[0], name[1:]
-        
+
         if mod_type == '&':
             conj_modules.append(mod_name)
-        elif mod_type == '%':
-            flipflop_states[mod_name] = 0
 
-        state = [0]
-        connected_mod_pulses = {}
-        modules[mod_name] = (mod_type, receivers, state, connected_mod_pulses)
+        # use one element list as state, so it can be mutated inside this tuple
+        state, src_mod_pulses = [], {}
+        modules[mod_name] = (mod_type, receivers, [LOW], src_mod_pulses)
 
+# Initialize conjunction modules' souces to LOW
 for mod_name, (mod_type, receivers, _, _) in modules.items():
     for r_name in receivers:
         if r_name in conj_modules:
-            modules[r_name][3][mod_name] = 0
+            modules[r_name][3][mod_name] = LOW
 
-# Part 1
-aoc.mark_task_start()
-
-def are_flipflops_off(modules):
+def flipflops_off(modules):
     for mod_type, _, state, _ in modules.values():
-        if mod_type == '%' and state[0] == 1:
+        if mod_type == '%' and state[0] == HIGH:
             return False
     return True
 
-PUSH_COUNT=1000
-low_pulses, high_pulses = 0, 0
-for step in range(1, PUSH_COUNT+1):
-    signals = bcast_signals[:]
-    i = 0
-    low_pulses += 1
-
-    # print(f'\nStep {step}')
+def process_button_push(modules, signals, sources=None, step_markers=None, step=None):
+    low_pulses, high_pulses = 0, 0
     while signals:
         dest_name, pulse, src_name = signals.pop(0)
-        if pulse:
+        if pulse == HIGH:
             high_pulses += 1
         else:
             low_pulses += 1
         if dest_name not in modules:
-            # print(f'> Module {dest_name} not in modules!')
             continue
-        mod_type, receivers, state, connected_mod_pulses = modules[dest_name]
+        mod_type, receivers, state, src_mod_pulses = modules[dest_name]
         pulse_to_send = pulse
-        # send_msg = ''
-        if mod_type == '%':
-            if pulse == 0:
-                state[0] = 0 if state[0] else 1
-                # send_msg = f'  sending {state[0]} to {receivers}'
-                pulse_to_send = state[0]
-                for r_name in receivers:
-                    signals.append((r_name, pulse_to_send, dest_name))
-            # else:
-                # print(f'flipflop received 1, ignoring')
-        elif mod_type == '&':
-            connected_mod_pulses[src_name] = pulse_to_send
-            pulse_to_send = 1
-            if sum(connected_mod_pulses.values()) == len(connected_mod_pulses):
-                # print(f'       All sources 1 for {dest_name}: {connected_mod_pulses}')
-                pulse_to_send = 0
-            # send_msg = f'  sending {pulse_to_send} to {receivers}'
+        if mod_type == '%' and pulse == LOW:
+            state[0] = LOW if state[0] else HIGH
+            pulse_to_send = state[0]
             for r_name in receivers:
                 signals.append((r_name, pulse_to_send, dest_name))
-        # print(f'{i+1}: {src_name} -> {pulse} -> {mod_type}{dest_name}')
-        # print(f'  {send_msg}')
+        elif mod_type == '&':
+            src_mod_pulses[src_name] = pulse_to_send
+            pulse_to_send = HIGH
+            if sum(src_mod_pulses.values()) == len(src_mod_pulses):
+                pulse_to_send = LOW
+            elif sources and dest_name in sources:
+                step_markers[dest_name].append(step)
+            for r_name in receivers:
+                signals.append((r_name, pulse_to_send, dest_name))
+        # print(f'{src_name} -> {pulse} -> {mod_type}{dest_name}')
 
-        # print(f'Iteration {i}, signals: {len(signals)}')
-        if are_flipflops_off(modules) and not len(signals):
-            # print(f'Breaking at {i}, signals: {len(signals)}')
+        if flipflops_off(modules) and not len(signals):
             break
-        i += 1
+    return low_pulses, high_pulses
 
-# print(f'{low_pulses}, {high_pulses}')
+# Part 1
+aoc.mark_task_start()
+PUSH_COUNT=1000
+low_pulses, high_pulses = 0, 0
+for step in range(1, PUSH_COUNT+1):
+    lp, hp = process_button_push(modules, bcast_signals[:])
+    low_pulses += lp + 1
+    high_pulses += hp
 result1 = low_pulses * high_pulses
 aoc.print_result(1, result1, exp1)
 
 # Part 2
+if aoc.is_test_mode():
+    sys.exit(0)
+
 aoc.mark_task_start()
-
-dep = ['ln', 'db', 'vq', 'tf']
-indexes = {x: [] for x in dep}
-PUSH_COUNT=1_000_000_000 if not aoc.is_test_mode() else 0
-done = False
-for step in range(1, PUSH_COUNT+1):
-    signals = bcast_signals[:]
-
-    if done:
-        break
-    counter = 0
-    names = []
-    while signals:
-        dest_name, pulse, src_name = signals.pop(0)
-        if dest_name not in modules:
-            if pulse == 0:
-                done = True
-            continue
-        mod_type, receivers, state, connected_mod_pulses = modules[dest_name]
-        pulse_to_send = pulse
-        if mod_type == '%':
-            if pulse == 0:
-                state[0] = 0 if state[0] else 1
-                pulse_to_send = state[0]
-                for r_name in receivers:
-                    signals.append((r_name, pulse_to_send, dest_name))
-        elif mod_type == '&':
-            connected_mod_pulses[src_name] = pulse_to_send
-            pulse_to_send = 1
-            if sum(connected_mod_pulses.values()) == len(connected_mod_pulses):
-                pulse_to_send = 0
-            elif dest_name in dep:
-                indexes[dest_name].append(step)
-            for r_name in receivers:
-                signals.append((r_name, pulse_to_send, dest_name))
-
-                
-    if len([None for x in indexes.values() if len(x) > 1]) == 4:
-        distances = [x[1] - x[0] for x in indexes.values()]
-        result2 = math.lcm(*distances)
+# Find modules, which must all be HIGH in order for 'rx' to get LOW signal
+sources = modules['tg'][3].keys()
+step_markers = {x: [] for x in sources}
+total_steps = 0
+step = 1
+while True:
+    process_button_push(modules, bcast_signals[:], sources, step_markers, step)
+    step += 1
+    # Get 10 repeats of each source module and make sure they repeat every X steps
+    if all([len(x) > 10 for x in step_markers.values()]):
+        for markers in step_markers.values():
+            diff = markers[1] - markers[0]
+            for i in range(1, len(markers)):
+                if markers[i] - markers[i - 1] != diff:
+                    raise RuntimeError('No pattern in data')
+        sequence_lengths = [x[1] - x[0] for x in step_markers.values()]
+        total_steps = math.lcm(*sequence_lengths)
         break
 
-result1 = low_pulses * high_pulses
-
+result2 = total_steps
 aoc.print_result(2, result2, exp2)
