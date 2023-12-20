@@ -16,7 +16,12 @@ echo "Generating files for task $1:"
 echo "$TASK_FILE, $TEST_FILE, $INPUT_FILE"
 
 cp template_task.py $TASK_FILE
-touch $TEST_FILE
-touch $INPUT_FILE
+dos2unix $TASK_FILE
+
+echo "\n" > $TEST_FILE
+dos2unix $TEST_FILE
+
+echo "\n" >  $INPUT_FILE
+dos2unix $INPUT_FILE
 
 echo "Files generated"
