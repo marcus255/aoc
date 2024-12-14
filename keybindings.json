@@ -1,16 +1,18 @@
 [
   {
-    "key": "ctrl+alt+r",
+    "key": "ctrl+alt+t",
     "command": "workbench.action.terminal.sendSequence",
     "args": {
-      "text": "python last_task_runner.py test\u000D"
-    }
+      "text": "python task_runner.py test\u000D"
+    },
+    "when": "terminalFocus"
   },
   {
     "key": "ctrl+alt+e",
     "command": "workbench.action.terminal.sendSequence",
     "args": {
-      "text": "python last_task_runner.py\u000D"
-    }
+      "text": "python task_runner.py\u000D"
+    },
+    "when": "terminalFocus"
   }
 ]
