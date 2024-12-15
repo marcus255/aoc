@@ -4,15 +4,13 @@
     "command": "workbench.action.terminal.sendSequence",
     "args": {
       "text": "python task_runner.py test\u000D"
-    },
-    "when": "terminalFocus"
+    }
   },
   {
     "key": "ctrl+alt+e",
     "command": "workbench.action.terminal.sendSequence",
     "args": {
       "text": "python task_runner.py\u000D"
-    },
-    "when": "terminalFocus"
+    }
   }
 ]
