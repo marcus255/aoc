@@ -1,5 +1,4 @@
 import aoc
-import sys
 import re
 
 lines = aoc.get_lines(__file__)
@@ -61,26 +60,25 @@ result1 = q1 * q2 * q3 * q4
 aoc.print_result(1, result1, exp1)
 
 # Part 2
-if aoc.is_test_mode():
+if not aoc.is_test_mode():
     # No solution for test mode
-    sys.exit()
 
-aoc.mark_task_start()
-robots = input_robots[:]
-EXP_CONSECUTIVE = 15
-n = 1
-while n:
-    move_all_robots(robots)
-    robots.sort(key=lambda x: x[0][0])
-    for h in range(H):
-        # get unique robot's X coordinates in sorted order
-        line = sorted(list(set([x[0][0] for x in robots if x[0][1] == h])))
-        # expect christmass tree to contain a continuous horizontal line of robots
-        if len(line) > EXP_CONSECUTIVE and len(line) == line[-1] - line[0] + 1:
-            # print_grid(robots)
-            result2 = n
-            n = -1
-            break
-    n += 1
+    aoc.mark_task_start()
+    robots = input_robots[:]
+    EXP_CONSECUTIVE = 15
+    n = 1
+    while n:
+        move_all_robots(robots)
+        robots.sort(key=lambda x: x[0][0])
+        for h in range(H):
+            # get unique robot's X coordinates in sorted order
+            line = sorted(list(set([x[0][0] for x in robots if x[0][1] == h])))
+            # expect christmass tree to contain a continuous horizontal line of robots
+            if len(line) > EXP_CONSECUTIVE and len(line) == line[-1] - line[0] + 1:
+                # print_grid(robots)
+                result2 = n
+                n = -1
+                break
+        n += 1
 
-aoc.print_result(2, result2, exp2)
+    aoc.print_result(2, result2, exp2)

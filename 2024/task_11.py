@@ -2,7 +2,7 @@ import aoc
 
 lines = aoc.get_lines(__file__)
 result1, result2 = 0, 0
-exp1, exp2 = 1, 1
+exp1, exp2 = 55312, 65601038650482
 
 # Common
 input_stones = list(map(int, lines[0].split()))

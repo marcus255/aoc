@@ -67,9 +67,7 @@ def print_result(part, result, exp=None):
     status, error = '', ''
     ok = (exp == result)
     time_spent_ms = (time.perf_counter() - start_time) * 1000
-    exec_time = f'{time_spent_ms:4.0f} ms' if start_time else 'N/A'
-    # print(sys.argv)
-    # task_number = args.year #sys.argv[0].split(".")[0].split('_')[1]
+    exec_time = f'{time_spent_ms:5.0f} ms' if start_time else 'N/A'
     name = f'[ {exec_time} ] [ {task_year}-{task_number}-{part} ]'
     if is_test_mode():
         status = ColorPrint.ok('[ PASS ] ') if ok else ColorPrint.err('[ FAIL ] ')
