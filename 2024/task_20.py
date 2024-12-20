@@ -1,5 +1,4 @@
 import aoc
-from collections import deque
 
 lines = aoc.get_lines(__file__)
 result1, result2 = 0, 0

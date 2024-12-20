@@ -1,5 +1,6 @@
 import aoc
 import re
+
 lines = aoc.get_lines(__file__)
 result1, result2 = 0, 0
 exp1, exp2 = 161, 48
