@@ -46,12 +46,12 @@ def get_test_vector_path(file_path):
         test_vector = f'test_{aoc_day}.txt'
     return os.path.join(path, test_vector)
 
-def get_lines(file_path):
+def get_lines(file_path, lstrip=True):
     global task_year, task_number
     task_year = os.path.basename(os.path.dirname(file_path))
     task_number = os.path.basename(file_path).split('_')[1].split('.')[0]
     with open(get_test_vector_path(file_path), 'r') as f:
-        lines = [x.strip() for x in f.readlines()]
+        lines = [x.strip() if lstrip else x.rstrip() for x in f.readlines()]
     return lines
 
 def get_content(file_path, strip=True):
