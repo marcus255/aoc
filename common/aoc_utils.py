@@ -33,3 +33,13 @@ def find_factors(n):
                 if n // i not in factors:
                     factors.append(n // i)
     return sorted(factors)
+
+def join_ranges(ranges):
+    joined = []
+    ranges.sort()
+    for low, high in ranges:
+        if not joined or joined[-1][1] < low - 1:
+            joined.append((low, high))
+        else:
+            joined[-1] = (joined[-1][0], max(joined[-1][1], high))
+    return joined
