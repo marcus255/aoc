@@ -18,7 +18,9 @@ TEST_FILE="test_$TASK.txt"
 INPUT_FILE="input_$TASK.txt"
 
 echo "Generating files for task $TASK in directory $YEAR:"
-echo "$TASK_FILE, $TEST_FILE, $INPUT_FILE"
+echo "$YEAR/$TASK_FILE"
+echo "$YEAR/$TEST_FILE"
+echo "$YEAR/$INPUT_FILE"
 
 cp $BASEDIR/common/template_task.py $TASK_FILE
 dos2unix $TASK_FILE
