@@ -17,10 +17,16 @@ TASK_FILE="task_$TASK.py"
 TEST_FILE="test_$TASK.txt"
 INPUT_FILE="input_$TASK.txt"
 
+
 echo "Generating files for task $TASK in directory $YEAR:"
 echo "$YEAR/$TASK_FILE"
 echo "$YEAR/$TEST_FILE"
 echo "$YEAR/$INPUT_FILE"
+
+if [ -e "$TASK_FILE" ] || [ -e "$TEST_FILE" ] || [ -e "$INPUT_FILE" ]; then
+    echo "Error: One or more files already exist."
+    exit 1
+fi
 
 cp $BASEDIR/common/template_task.py $TASK_FILE
 dos2unix $TASK_FILE
