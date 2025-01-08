@@ -16,6 +16,18 @@ def find_last_year(dir):
     files = [d for d in os.listdir(dir) if all([os.path.isdir(d), d.startswith('20') and len(d) == 4])]
     return sorted(files)[-1]
 
+def header(func):
+    def wrapper(task_path, mode):
+        bar = '='*80
+        print(f'{bar}')
+        label = f'Running {task_path} in {mode} mode'
+        print(f'| {label.ljust(len(bar) - 4)} |')
+        print(bar)
+        func(task_path, mode)
+        print()
+    return wrapper
+
+@header
 def run_task(task_path, mode):
     if len(sys.argv) == 1:
         sys.argv.append('')
@@ -32,14 +44,7 @@ def main(args):
 
     task_script = f'task_{args.task}.py' if args.task else sorted(files)[-1]
     task_path = os.path.join(dir, task_script)
-
-    print('\n' + '='*80)
-    label = f'Running {task_path} in {args.mode} mode'
-    space = (80-len(label)-4) * ' '
-    print(f'| {label} {space}|')
-    print('='*80)
     run_task(task_path, args.mode)
-    print('='*80 + '\n')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Run the last task file')
