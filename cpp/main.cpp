@@ -14,6 +14,7 @@ void runTasks(const std::vector<std::string>& taskNames) {
     }
 
     for (auto& task : tasks) {
+        // TODO: Handle exceptions thrown by particular tasks
         task->run();
     }
 }

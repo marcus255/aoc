@@ -10,7 +10,7 @@ class Task : public AocTask {
 public:
     Task();
 
-    std::string partOneSolution(std::vector<std::string> input) override;
-    std::string partTwoSolution(std::vector<std::string> input) override;
+    std::string partOneSolution(const std::vector<std::string>& input) override;
+    std::string partTwoSolution(const std::vector<std::string>& input) override;
 };
 }

@@ -44,6 +44,11 @@ void AocTask::loadInputFile(TaskType type) {
         std::getline(test_stream, line);
         input.push_back(line);
     }
+    input_file.close();
+
+    if (input.empty()) {
+        throw std::runtime_error("No input data loaded from file: " + input_path);
+    }
 }
 
 void AocTask::runTest(const std::string &prefix, const StrVector& input, const std::string& expectedAnswer,

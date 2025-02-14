@@ -17,8 +17,8 @@ public:
     AocTask(std::string name, std::string answer1 = "", std::string answer2 = "");
     virtual ~AocTask() = default;
 
-    virtual std::string partOneSolution(StrVector input) = 0;
-    virtual std::string partTwoSolution(StrVector input) = 0;
+    virtual std::string partOneSolution(const StrVector& input) = 0;
+    virtual std::string partTwoSolution(const StrVector& input) = 0;
 
     void run();
 
