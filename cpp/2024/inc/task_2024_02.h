@@ -4,8 +4,7 @@
 #include "../../framework/inc/aoc_task.h"
 #include <string>
 
-// TODO: generate this file/code automatically from tasklist.h using CMake or macro
-namespace Day_2024_01 {
+namespace Day_2024_02 {
 class Task : public AocTask {
 public:
     Task();
