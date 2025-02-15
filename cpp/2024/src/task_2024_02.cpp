@@ -57,7 +57,7 @@ std::string Task::partTwoSolution(const std::vector<std::string>& input) {
     auto allNumbers = convertInputToVector(input);
     int safe = 0;
     for (auto numbers : allNumbers) {
-        for (int i = 0; i < numbers.size(); i++) {
+        for (size_t i = 0; i < numbers.size(); i++) {
             std::vector<int> newNumbers = numbers;
             newNumbers.erase(newNumbers.begin() + i);
             if (isReportSafe(newNumbers)) {

@@ -17,5 +17,10 @@ list(APPEND SOURCES "main.cpp")
 include_directories(framework/inc)
 include_directories(2024/inc)
 
+# Set compiler flags for GCC
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
+endif()
+
 # Add the executable
 add_executable(AdventOfCode ${SOURCES})

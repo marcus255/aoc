@@ -22,21 +22,21 @@ public:
 
     void run();
 
+private:
+    void parseName();
+    void loadInputFile(TaskType type);
+    void runTest(const std::string &prefix, const StrVector& input, const std::string& expectedAnswer,
+        const std::function<std::string(const StrVector&)>& solutionFunc);
+        void runTask(const std::string &prefix, const StrVector& input,
+            const std::function<std::string(const StrVector&)>& solutionFunc);
+
+            std::string year{};
+            std::string day{};
+            std::string name{};
+
 protected:
     std::string answer1;
     std::string answer2;
     StrVector testInput;
     StrVector taskInput;
-
-private:
-    void parseName();
-    void loadInputFile(TaskType type);
-    void runTest(const std::string &prefix, const StrVector& input, const std::string& expectedAnswer,
-                 const std::function<std::string(const StrVector&)>& solutionFunc);
-    void runTask(const std::string &prefix, const StrVector& input,
-                 const std::function<std::string(const StrVector&)>& solutionFunc);
-
-    std::string year{};
-    std::string day{};
-    std::string name;
 };

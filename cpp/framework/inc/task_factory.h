@@ -10,7 +10,7 @@ class TaskFactory {
 public:
     using TaskCreator = std::unique_ptr<AocTask>(*)();
 
-    static std::unique_ptr<AocTask> createTask(const std::string& taskName) noexcept(false);;
+    static std::unique_ptr<AocTask> createTask(const std::string& taskName) noexcept(false);
 
 private:
     static std::unordered_map<std::string, TaskCreator> taskMap;
