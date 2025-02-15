@@ -20,6 +20,7 @@ public:
     virtual std::string partOneSolution(const StrVector& input) = 0;
     virtual std::string partTwoSolution(const StrVector& input) = 0;
 
+    virtual bool isTestMode() const { return testMode; }
     void run();
 
 private:
@@ -27,12 +28,13 @@ private:
     void loadInputFile(TaskType type);
     void runTest(const std::string &prefix, const StrVector& input, const std::string& expectedAnswer,
         const std::function<std::string(const StrVector&)>& solutionFunc);
-        void runTask(const std::string &prefix, const StrVector& input,
-            const std::function<std::string(const StrVector&)>& solutionFunc);
+    void runTask(const std::string &prefix, const StrVector& input,
+        const std::function<std::string(const StrVector&)>& solutionFunc);
 
-            std::string year{};
-            std::string day{};
-            std::string name{};
+    std::string year{};
+    std::string day{};
+    std::string name{};
+    bool testMode{false};
 
 protected:
     std::string answer1;

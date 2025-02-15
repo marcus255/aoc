@@ -53,6 +53,7 @@ void AocTask::loadInputFile(TaskType type) {
 
 void AocTask::runTest(const std::string &prefix, const StrVector& input, const std::string& expectedAnswer,
                       const std::function<std::string(const StrVector&)>& solutionFunc) {
+    testMode = true;
     auto result = solutionFunc(input);
     auto passed = result == expectedAnswer;
     std::cout << prefix << ": " << (passed ? "\033[32m" : "\033[31m") << result;
@@ -63,7 +64,8 @@ void AocTask::runTest(const std::string &prefix, const StrVector& input, const s
 }
 
 void AocTask::runTask(const std::string &prefix, const StrVector& input,
-                      const std::function<std::string(const StrVector&)>& solutionFunc) {
+    const std::function<std::string(const StrVector&)>& solutionFunc) {
+    testMode = false;
     auto result = solutionFunc(input);
     std::cout << prefix << ": " << result << std::endl;
 }
