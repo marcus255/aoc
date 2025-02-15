@@ -1,11 +1,17 @@
 #include "../inc/task_factory.h"
-#include "../inc/aoc_task.h"
 #include "../../2024/inc/tasklist.h"
 
+// Macro to generate task map entries
+#define REGISTER_TASK(YEAR_DAY) \
+    {#YEAR_DAY, []() -> std::unique_ptr<AocTask> { \
+        return std::make_unique<Day_##YEAR_DAY::Task>(); \
+    }}
+
+// Map of task names to task creators
 std::unordered_map<std::string, TaskFactory::TaskCreator> TaskFactory::taskMap = {
-    {"2024_01", []() -> std::unique_ptr<AocTask> { return std::make_unique<Day_2024_01::Task>(); }},
-    {"2024_02", []() -> std::unique_ptr<AocTask> { return std::make_unique<Day_2024_02::Task>(); }},
-    {"2024_03", []() -> std::unique_ptr<AocTask> { return std::make_unique<Day_2024_03::Task>(); }},
+    #define X(YEAR_DAY) REGISTER_TASK(YEAR_DAY),
+    TASK_NAMES
+    #undef X
 };
 
 std::unique_ptr<AocTask> TaskFactory::createTask(const std::string& taskName) {
