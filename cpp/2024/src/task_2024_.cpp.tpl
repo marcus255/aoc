@@ -1,9 +1,9 @@
-#include "../inc/task_2024_02.h"
+#include "../inc/tasklist.h"
 
-namespace Day_2024_02 {
+namespace Day_2024_ {
 
 Task::Task()
-    : AocTask{"2024_02", "<not defined>", "<not defined>"} {
+    : AocTask{"2024_", "<not defined>", "<not defined>"} {
 }
 
 std::string Task::partOneSolution(const std::vector<std::string>& input) {

@@ -9,10 +9,10 @@ std::optional<std::variant<bool, std::string>> parseArgument(const std::string& 
     return std::nullopt;
 }
 
-void parseArguments(int argc, char* argv[], bool& runAll, bool& runLast, std::string& singleTask) {
+void parseArguments(int argc, char* argv[], bool& runAll, bool& runLast, std::string& singleTask, std::string& year) {
     std::unordered_map<std::string, std::variant<bool, std::string>> options = {
         {"--last", true},
-        {"--all", true},
+        {"--all", ""},
         {"--task", ""},
         // TODO: add verbose option
     };
@@ -24,19 +24,26 @@ void parseArguments(int argc, char* argv[], bool& runAll, bool& runLast, std::st
             if (std::holds_alternative<bool>(*result)) {
                 if (arg == "--last") {
                     runLast = true;
-                } else if (arg == "--all") {
-                    runAll = true;
                 }
-            } else if (std::holds_alternative<std::string>(*result) && i + 1 < argc) {
-                singleTask = argv[++i];
+            } else if (std::holds_alternative<std::string>(*result)) {
+                if (arg == "--all") {
+                    runAll = true;
+                    if (i + 1 < argc && argv[i + 1][0] != '-') {
+                        year = argv[++i];
+                    } else {
+                        year = "2024";
+                    }
+                } else if (arg == "--task" && i + 1 < argc) {
+                    singleTask = argv[++i];
+                }
             }
         } else {
-            std::cerr << "Usage: " << argv[0] << " [--last] [--all] [--task <task_name>]" << std::endl;
+            showHelp(argv[0]);
             exit(1);
         }
     }
 }
 
 void showHelp(const char* programName) {
-    std::cerr << "Usage: " << programName << " [--last] [--all] [--task <task_name>]" << std::endl;
+    std::cerr << "Usage: " << programName << " [--last] [--all <year>] [--task <task_name>]" << std::endl;
 }
