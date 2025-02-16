@@ -5,7 +5,7 @@
 #include <numeric>
 
 
-namespace Day_2024_03 {
+namespace Task_2024_03 {
 
 Task::Task()
     : AocTask{"2024_03", "161", "48"} {

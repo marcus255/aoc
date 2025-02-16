@@ -5,7 +5,7 @@
 #include <numeric>
 #include <tuple>
 
-namespace Day_2024_01 {
+namespace Task_2024_01 {
 
 Task::Task()
     : AocTask{"2024_01", "11", "31"} {

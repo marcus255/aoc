@@ -4,7 +4,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace Day_2024_02 {
+namespace Task_2024_02 {
 
 Task::Task()
     : AocTask{"2024_02", "2", "4"} {
