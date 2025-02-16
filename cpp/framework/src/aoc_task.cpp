@@ -3,6 +3,7 @@
 #include <sstream>
 #include <fstream>
 
+
 AocTask::AocTask(std::string name, std::string answer1, std::string answer2)
     : name{std::move(name)}, answer1{std::move(answer1)}, answer2{std::move(answer2)} {
     parseName();

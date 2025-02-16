@@ -4,6 +4,8 @@
 #include <stdexcept>
 #include <vector>
 #include <functional>
+#include <any>
+
 
 class AocTask {
     using StrVector = std::vector<std::string>;
@@ -41,4 +43,6 @@ protected:
     std::string answer2;
     StrVector testInput;
     StrVector taskInput;
+    std::any testData;
+    std::any taskData;
 };

@@ -7,6 +7,7 @@
     X(2024_01) \
     X(2024_02) \
     X(2024_03) \
+    X(2024_04) \
     /* <NEXT_TASK_MARKER> */
     // Do not change the marker comment, it is used by the task generator
 
