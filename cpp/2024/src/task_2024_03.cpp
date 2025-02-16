@@ -5,7 +5,6 @@
 #include <numeric>
 
 
-// TODO: instead of namespaces, put 2024_03 into class name only
 namespace Day_2024_03 {
 
 Task::Task()
@@ -51,24 +50,7 @@ std::string Task::partTwoSolution(const std::vector<std::string>& input) {
         joinedString = "xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"s;
     }
     const std::regex pattern(R"(don't\(\).*?do\(\))");
-    std::smatch matches;
-    std::vector<std::string> stringsToRemove;
-
-    auto searchStart(joinedString.cbegin());
-    while (std::regex_search(searchStart, joinedString.cend(), matches, pattern)) {
-        if (matches.size() != 1) {
-            throw std::runtime_error("Regex failed");
-        }
-        stringsToRemove.push_back(matches[0].str());
-        searchStart = matches.suffix().first;
-    }
-
-    for (const auto& str : stringsToRemove) {
-        size_t pos = 0;
-        while ((pos = joinedString.find(str, pos)) != std::string::npos) {
-            joinedString.erase(pos, str.length());
-        }
-    }
+    joinedString = std::regex_replace(joinedString, pattern, "");
 
     return std::to_string(findMultResult(joinedString));
 }
