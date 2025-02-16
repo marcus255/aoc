@@ -34,24 +34,25 @@ int main(int argc, char* argv[]) {
 
     parseArguments(argc, argv, runAll, runLast, singleTask, year);
 
-    std::vector<std::string> allTaskNames;
-    for (int i = 1; i <= 25; ++i) {
-        std::stringstream ss;
-        ss << year << "_" << std::setw(2) << std::setfill('0') << i;
-        allTaskNames.push_back(ss.str());
-    }
-
-    auto allTasks = createTasks(allTaskNames);
-    decltype(allTasks) tasksToRun;
-    if (runAll) {
-        tasksToRun = std::move(allTasks);
-    } else if (runLast) {
-        tasksToRun.push_back(std::move(allTasks.back()));
-    } else if (!singleTask.empty()) {
+    decltype(createTasks({singleTask})) tasksToRun;
+    if (!singleTask.empty()) {
         tasksToRun = createTasks({singleTask});
     } else {
-        showHelp(argv[0]);
-        return 1;
+        std::vector<std::string> allTaskNames;
+        for (int i = 1; i <= 25; ++i) {
+            std::stringstream ss;
+            ss << year << "_" << std::setw(2) << std::setfill('0') << i;
+            allTaskNames.push_back(ss.str());
+        }
+        auto allTasks = createTasks(allTaskNames);
+        if (runAll) {
+            tasksToRun = std::move(allTasks);
+        } else if (runLast) {
+            tasksToRun.push_back(std::move(allTasks.back()));
+        } else {
+            showHelp(argv[0]);
+            return 1;
+        }
     }
 
     if (tasksToRun.empty()) {
