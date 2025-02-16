@@ -5,9 +5,8 @@
 #include <numeric>
 #include <tuple>
 
-namespace Task_2024_01 {
 
-Task::Task()
+Task_2024_01::Task_2024_01()
     : AocTask{"2024_01", "11", "31"} {
 }
 
@@ -28,7 +27,7 @@ auto getVectors(const std::vector<std::string>& input) {
     return std::make_tuple(left, right);
 }
 
-std::string Task::partOneSolution(const std::vector<std::string>& input) {
+std::string Task_2024_01::partOneSolution(const std::vector<std::string>& input) {
     auto [left, right] = getVectors(input);
 
     std::sort(left.begin(), left.end());
@@ -41,7 +40,7 @@ std::string Task::partOneSolution(const std::vector<std::string>& input) {
     return std::to_string(std::accumulate(distances.begin(), distances.end(), 0));
 }
 
-std::string Task::partTwoSolution(const std::vector<std::string>& input) {
+std::string Task_2024_01::partTwoSolution(const std::vector<std::string>& input) {
     auto vectors = getVectors(input);
     auto& [left, right] = vectors;
 
@@ -53,5 +52,4 @@ std::string Task::partTwoSolution(const std::vector<std::string>& input) {
     });
 
     return std::to_string(std::accumulate(scores.begin(), scores.end(), 0));
-}
 }

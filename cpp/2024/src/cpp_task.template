@@ -1,16 +1,15 @@
 #include "../inc/tasklist.h"
 
-namespace Task_<TASK_YEAR_DATE> {
 
-Task::Task()
+Task_<TASK_YEAR_DATE>::Task_<TASK_YEAR_DATE>()
     : AocTask{"<TASK_YEAR_DATE>", "<not defined>", "<not defined>"} {
 }
 
-std::string Task::partOneSolution([[maybe_unused]] const std::vector<std::string>& input) {
+std::string Task_<TASK_YEAR_DATE>::partOneSolution([[maybe_unused]] const std::vector<std::string>& input) {
     return "<none>";
 }
 
-std::string Task::partTwoSolution([[maybe_unused]] const std::vector<std::string>& input) {
+std::string Task_<TASK_YEAR_DATE>::partTwoSolution([[maybe_unused]] const std::vector<std::string>& input) {
     return "<none>";
 }
-}
+

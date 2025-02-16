@@ -4,9 +4,8 @@
 #include <vector>
 #include <algorithm>
 
-namespace Task_2024_02 {
 
-Task::Task()
+Task_2024_02::Task_2024_02()
     : AocTask{"2024_02", "2", "4"} {
 }
 
@@ -41,7 +40,7 @@ bool isReportSafe(const std::vector<int>& numbers) {
     return diffOk && (static_cast<int>(sortedAsc) + static_cast<int>(sortedDesc) == 1);
 }
 
-std::string Task::partOneSolution(const std::vector<std::string>& input) {
+std::string Task_2024_02::partOneSolution(const std::vector<std::string>& input) {
     auto allNumbers = convertInputToVector(input);
     int safe = 0;
     for (auto numbers : allNumbers) {
@@ -53,7 +52,7 @@ std::string Task::partOneSolution(const std::vector<std::string>& input) {
     return std::to_string(safe);
 }
 
-std::string Task::partTwoSolution(const std::vector<std::string>& input) {
+std::string Task_2024_02::partTwoSolution(const std::vector<std::string>& input) {
     auto allNumbers = convertInputToVector(input);
     int safe = 0;
     for (auto numbers : allNumbers) {
@@ -68,5 +67,4 @@ std::string Task::partTwoSolution(const std::vector<std::string>& input) {
     }
 
     return std::to_string(safe);
-}
 }

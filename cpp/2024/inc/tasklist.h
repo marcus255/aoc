@@ -12,13 +12,11 @@
 
 // Macro to generate task class declarations
 #define X(YEAR_DAY) \
-namespace Task_##YEAR_DAY { \
-    class Task : public AocTask { \
-    public: \
-        Task(); \
-        std::string partOneSolution(const std::vector<std::string>& input) override; \
-        std::string partTwoSolution(const std::vector<std::string>& input) override; \
-    }; \
-}
+class Task_##YEAR_DAY : public AocTask { \
+public: \
+    Task_##YEAR_DAY(); \
+    std::string partOneSolution(const std::vector<std::string>& input) override; \
+    std::string partTwoSolution(const std::vector<std::string>& input) override; \
+};
 TASK_NAMES
 #undef X

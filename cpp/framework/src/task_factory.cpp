@@ -4,7 +4,7 @@
 // Macro to generate task map entries
 #define REGISTER_TASK(YEAR_DAY) \
     {#YEAR_DAY, []() -> std::unique_ptr<AocTask> { \
-        return std::make_unique<Task_##YEAR_DAY::Task>(); \
+        return std::make_unique<Task_##YEAR_DAY>(); \
     }}
 
 // Map of task names to task creators

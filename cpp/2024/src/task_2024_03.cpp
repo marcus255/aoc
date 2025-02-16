@@ -5,9 +5,7 @@
 #include <numeric>
 
 
-namespace Task_2024_03 {
-
-Task::Task()
+Task_2024_03::Task_2024_03()
     : AocTask{"2024_03", "161", "48"} {
 }
 
@@ -37,12 +35,12 @@ int findMultResult(const std::string& inputStr) {
     return std::accumulate(multiplicated.begin(), multiplicated.end(), 0);
 }
 
-std::string Task::partOneSolution(const std::vector<std::string>& input) {
+std::string Task_2024_03::partOneSolution(const std::vector<std::string>& input) {
     const std::string joinedString = std::accumulate(input.begin(), input.end(), std::string());
     return std::to_string(findMultResult(joinedString));
 }
 
-std::string Task::partTwoSolution(const std::vector<std::string>& input) {
+std::string Task_2024_03::partTwoSolution(const std::vector<std::string>& input) {
     std::string joinedString = std::accumulate(input.begin(), input.end(), std::string());
     if (isTestMode()) {
         // In part 2, test input differs from part 1
@@ -53,5 +51,4 @@ std::string Task::partTwoSolution(const std::vector<std::string>& input) {
     joinedString = std::regex_replace(joinedString, pattern, "");
 
     return std::to_string(findMultResult(joinedString));
-}
 }
