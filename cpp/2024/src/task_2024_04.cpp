@@ -30,6 +30,9 @@ int findNumMatches(const xyMapPtr& coords, size_t xMoves, size_t yMoves, const s
             for (const auto& seq_offsets : offsets) {
                 std::string sequence;
                 for (const auto& offset : seq_offsets) {
+                    if (coords->find({x + offset.first, y + offset.second}) == coords->end()) {
+                        break;
+                    }
                     sequence += ((*coords)[{x + offset.first, y + offset.second}]);
                 }
                 if (std::find(matches.begin(), matches.end(), sequence) != matches.end()) {
