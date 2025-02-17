@@ -32,20 +32,15 @@ void AocTask::loadInputFile(TaskType type) {
     const std::string year_path = root_path + "/" + year;
     const std::string input_path = year_path + prefix + day + ".txt";
 
-    std::ifstream input_file;
-    input_file.open(input_path);
+    std::ifstream input_file(input_path);
     if (!input_file.is_open()) {
         throw std::runtime_error("Failed to open input file: " + input_path);
     }
 
-    std::stringstream test_stream;
-    test_stream << input_file.rdbuf();
-    while (!test_stream.eof()) {
-        std::string line;
-        std::getline(test_stream, line);
+    std::string line;
+    while (std::getline(input_file, line)) {
         input.push_back(line);
     }
-    input_file.close();
 
     if (input.empty()) {
         throw std::runtime_error("No input data loaded from file: " + input_path);
