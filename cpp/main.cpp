@@ -14,10 +14,14 @@ auto createTasks(const std::vector<std::string>& taskNames) {
 
     for (const auto& taskName : taskNames) {
         try {
-            tasks.push_back(TaskFactory::createTask(taskName));
+            auto task = TaskFactory::createTask(taskName);
+            if (!task) {
+                continue;
+            }
+            tasks.push_back(std::move(task));
         } catch (const std::runtime_error& e) {
             // TODO: Change to warning message visible in verbose mode
-            // std::cerr << "Error creating task '" << taskName << "': " << e.what() << std::endl;
+            std::cerr << "Error creating task '" << taskName << "': " << e.what() << std::endl;
             continue; // Skip this task and continue with the next one
         }
     }
@@ -25,39 +29,42 @@ auto createTasks(const std::vector<std::string>& taskNames) {
     return tasks;
 }
 
-int main(int argc, char* argv[]) {
+auto generateTaskNames(const std::string& year) {
     std::vector<std::string> taskNames;
+    for (int i = 1; i <= 25; ++i) {
+        std::stringstream ss;
+        ss << year << "_" << std::setw(2) << std::setfill('0') << i;
+        taskNames.push_back(ss.str());
+    }
+    return taskNames;
+}
+
+int main(int argc, char* argv[]) {
     bool runAll = false;
     bool runLast = false;
     std::string singleTask;
     std::string year = "2024";
 
     parseArguments(argc, argv, runAll, runLast, singleTask, year);
+    bool single = !singleTask.empty();
 
-    decltype(createTasks({singleTask})) tasksToRun;
-    if (!singleTask.empty()) {
-        tasksToRun = createTasks({singleTask});
-    } else {
-        std::vector<std::string> allTaskNames;
-        for (int i = 1; i <= 25; ++i) {
-            std::stringstream ss;
-            ss << year << "_" << std::setw(2) << std::setfill('0') << i;
-            allTaskNames.push_back(ss.str());
-        }
-        auto allTasks = createTasks(allTaskNames);
-        if (runAll) {
-            tasksToRun = std::move(allTasks);
-        } else if (runLast) {
-            tasksToRun.push_back(std::move(allTasks.back()));
-        } else {
-            showHelp(argv[0]);
-            return 1;
-        }
+    if ((runAll && runLast) || (runAll && single) || (runLast && single)) {
+        showHelp(argv[0]);
+        return 1;
     }
+
+    auto taskNames = !singleTask.empty() ? std::vector<std::string>{singleTask} : generateTaskNames(year);
+    auto tasksToRun = createTasks(taskNames);
 
     if (tasksToRun.empty()) {
         std::cerr << "No tasks for year " << year << " found" << std::endl;
         return 1;
+    }
+
+    if (runLast) {
+        auto lastTask = std::move(tasksToRun.back());
+        tasksToRun.clear();
+        tasksToRun.push_back(std::move(lastTask));
     }
 
     for (auto& task : tasksToRun) {

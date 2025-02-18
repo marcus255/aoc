@@ -16,7 +16,7 @@ class AocTask {
     };
 
 public:
-    AocTask(std::string name, std::string answer1 = "", std::string answer2 = "");
+    AocTask(std::string name, std::string answer1 = "", std::string answer2 = "") noexcept(false);
     virtual ~AocTask() = default;
 
     virtual std::string partOneSolution(const StrVector& input) = 0;

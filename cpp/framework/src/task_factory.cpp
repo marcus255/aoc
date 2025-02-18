@@ -17,7 +17,7 @@ std::unordered_map<std::string, TaskFactory::TaskCreator> TaskFactory::taskMap =
 std::unique_ptr<AocTask> TaskFactory::createTask(const std::string& taskName) {
     auto it = taskMap.find(taskName);
     if (it == taskMap.end()) {
-        throw std::runtime_error("Task not defined: " + taskName);
+        return nullptr;
     }
     return it->second();
 }

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <filesystem>
 
 
 AocTask::AocTask(std::string name, std::string answer1, std::string answer2)
@@ -26,15 +27,12 @@ void AocTask::parseName() {
 
 void AocTask::loadInputFile(TaskType type) {
     auto& input = type == TaskType::Test ? testInput : taskInput;
-    auto prefix = type == TaskType::Test ? "/test_" : "/input_";
-
-    const std::string root_path = "..";
-    const std::string year_path = root_path + "/" + year;
-    const std::string input_path = year_path + prefix + day + ".txt";
+    auto prefix = type == TaskType::Test ? "test_" : "input_";
+    const auto input_path = std::filesystem::path("..") / year / (prefix + day + ".txt");
 
     std::ifstream input_file(input_path);
     if (!input_file.is_open()) {
-        throw std::runtime_error("Failed to open input file: " + input_path);
+        throw std::runtime_error("Failed to open input file: " + input_path.string());
     }
 
     std::string line;
@@ -43,7 +41,7 @@ void AocTask::loadInputFile(TaskType type) {
     }
 
     if (input.empty()) {
-        throw std::runtime_error("No input data loaded from file: " + input_path);
+        throw std::runtime_error("No input data loaded from file: " + input_path.string());
     }
 }
 

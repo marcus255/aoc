@@ -10,10 +10,11 @@ std::optional<std::variant<bool, std::string>> parseArgument(const std::string& 
 }
 
 void parseArguments(int argc, char* argv[], bool& runAll, bool& runLast, std::string& singleTask, std::string& year) {
+    using namespace std::string_literals;
     std::unordered_map<std::string, std::variant<bool, std::string>> options = {
         {"--last", true},
-        {"--all", ""},
-        {"--task", ""},
+        {"--all", ""s},
+        {"--task", ""s},
         // TODO: add verbose option
     };
 
@@ -45,5 +46,5 @@ void parseArguments(int argc, char* argv[], bool& runAll, bool& runLast, std::st
 }
 
 void showHelp(const char* programName) {
-    std::cerr << "Usage: " << programName << " [--last] [--all <year>] [--task <task_name>]" << std::endl;
+    std::cerr << "Usage: " << programName << " [--last] | [--all <year>] } [--task <task_name>]" << std::endl;
 }
